@@ -9,7 +9,7 @@ import java.util.concurrent.CountDownLatch;
 /*
  This is the basicclass, representing the patrons at the bar
  */
-
+  
 public class Patron extends Thread {
 	
 	private Random random = new Random();// for variation in Patron behaviour

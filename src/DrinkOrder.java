@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 public class DrinkOrder  {
 
     //DO NOT change the code below

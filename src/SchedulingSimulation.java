@@ -40,7 +40,7 @@ public class SchedulingSimulation {
 		writer = new FileWriter("turnaround_time_"+Integer.toString(sched)+".txt", false);
 		Patron.fileW=writer;
 
-		startSignal= new CountDownLatch(noPatrons+2);//Barman and patrons and main method must be raeady
+		startSignal= new CountDownLatch(noPatrons+2);//Barman and patrons and main method must be ready
 		
 		//create barman
         Andre= new Barman(startSignal,sched); 

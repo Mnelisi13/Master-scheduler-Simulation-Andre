@@ -1,6 +1,7 @@
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import java.util.Comparator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
@@ -23,7 +24,8 @@ public class Barman extends Thread {
 		if (schedAlg==0)
 			this.orderQueue = new LinkedBlockingQueue<>();
 		//FIX below
-		else this.orderQueue = new LinkedBlockingQueue<>(); //this just does the same thing 
+		else {System.out.println("This is the SJF Scheduler!!");
+			this.orderQueue = new PriorityBlockingQueue<>(10, Comparator.comparingInt((DrinkOrder o) -> o.getExecutionTime()));}
 		
 	    this.startSignal=startSignal;
 	}
