@@ -70,6 +70,7 @@ public class Patron extends Thread {
 			endTime = System.currentTimeMillis();
 			long totalTime = endTime - startTime;
 			
+			
 			writeToFile( String.format("%d,%d,%d\n",ID,arrivalTime,totalTime));
 			System.out.println("Patron "+ this.ID + " got order in " + totalTime);
 			
