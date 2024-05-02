@@ -68,13 +68,11 @@ public class Patron extends Thread {
 			}
 
 			endTime = System.currentTimeMillis();
-			long totalTime = endTime - startTime;
+			long totalTime = endTime - startTime; // TurnAround time?
+			long waitingTime = arrivalTime-startTime;
 			
-			
-			writeToFile( String.format("%d,%d,%d\n",ID,arrivalTime,totalTime));
+			writeToFile( String.format("%d,%d,%d,%d\n",ID,arrivalTime,totalTime,waitingTime));
 			System.out.println("Patron "+ this.ID + " got order in " + totalTime);
-			
-			
 		} catch (InterruptedException e1) {  //do nothing
 		} catch (IOException e) {
 			//  Auto-generated catch block
