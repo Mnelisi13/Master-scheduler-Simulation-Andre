@@ -17,9 +17,8 @@ public class Barman extends Thread {
 
 	private CountDownLatch startSignal;
 	private BlockingQueue<DrinkOrder> orderQueue;
-
-
-	
+	private int patrons = 0;
+    private int totalTime =0;
 	Barman(  CountDownLatch startSignal,int schedAlg) {
 		if (schedAlg==0)
 			this.orderQueue = new LinkedBlockingQueue<>();
@@ -35,7 +34,6 @@ public class Barman extends Thread {
         orderQueue.put(order);
     }
 	
-	
 	public void run() {
 		try {
 			DrinkOrder nextOrder;
@@ -44,11 +42,15 @@ public class Barman extends Thread {
 			startSignal.await(); //check latch - don't start until told to do so
 
 			while(true) {
-				nextOrder=orderQueue.take();
+				nextOrder=orderQueue.take(); //orders
 				System.out.println("---Barman preparing order for patron "+ nextOrder.toString());
 				sleep(nextOrder.getExecutionTime()); //processing order
 				System.out.println("---Barman has made order for patron "+ nextOrder.toString());
 				nextOrder.orderDone();
+				patrons++;
+				totalTime += nextOrder.getExecutionTime();
+				double throughput = (double) patrons / ((double) totalTime / 1000); // Throughput in patrons per second
+                System.out.println("Throughput: " + throughput + " patrons per second");
 			}
 				
 		} catch (InterruptedException e1) {

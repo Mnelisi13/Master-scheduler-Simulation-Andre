@@ -19,9 +19,9 @@ public class Patron extends Thread {
 
 	private int ID; //thread ID 
 	private int lengthOfOrder;
-	private long startTime, endTime; //for all the metrics
-	
+	private long startTime, endTime, arrivalTime, waitingTime; //for all the metrics
 	public static FileWriter fileW;
+	private Long firstDrinkStartTime;
 
 
 	private DrinkOrder [] drinksOrder;
@@ -40,14 +40,12 @@ public class Patron extends Thread {
 	    }
 	}
 	
-	
-
 	public void run() {
 		try {
 			//Do NOT change the block of code below - this is the arrival times
 			startSignal.countDown(); //this patron is ready
 			startSignal.await(); //wait till everyone is ready
-	        int arrivalTime = random.nextInt(300)+ID*100;  // patrons arrive gradually later
+	        arrivalTime = random.nextInt(300)+ID*100;  // patrons arrive gradually later
 	        sleep(arrivalTime);// Patrons arrive at staggered  times depending on ID 
 			System.out.println("thirsty Patron "+ this.ID +" arrived");
 			//END do not change
@@ -55,7 +53,9 @@ public class Patron extends Thread {
 	        //create drinks order
 	        for(int i=0;i<lengthOfOrder;i++) {
 	        	drinksOrder[i]=new DrinkOrder(this.ID);
-	        	
+				/*if (i == 0) {
+                    firstDrinkStartTime = System.currentTimeMillis(); // Record start time of first drink order
+                }*/
 	        }
 			System.out.println("Patron "+ this.ID + " submitting order of " + lengthOfOrder +" drinks"); //output in standard format  - do not change this
 	        startTime = System.currentTimeMillis();//started placing orders
@@ -67,11 +67,11 @@ public class Patron extends Thread {
 				drinksOrder[i].waitForOrder();
 			}
 
-			endTime = System.currentTimeMillis();
+			endTime = System.currentTimeMillis(); 
 			long totalTime = endTime - startTime; // TurnAround time?
-			long waitingTime = arrivalTime-startTime;
-			
-			writeToFile( String.format("%d,%d,%d,%d\n",ID,arrivalTime,totalTime,waitingTime));
+			waitingTime = startTime - arrivalTime;
+			System.out.println("start time: "+startTime+"endtime: "+endTime+" waiting time:"+waitingTime+"\n");
+			writeToFile( String.format("%d,%d,%d\n",ID,arrivalTime,totalTime));
 			System.out.println("Patron "+ this.ID + " got order in " + totalTime);
 		} catch (InterruptedException e1) {  //do nothing
 		} catch (IOException e) {
