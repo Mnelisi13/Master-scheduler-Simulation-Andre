@@ -27,8 +27,6 @@ public class SchedulingSimulation {
 
 	public static void main(String[] args) throws InterruptedException, IOException {
 		
-		
-
 		//deal with command line arguments if provided
 		if (args.length==1) {
 			noPatrons=Integer.parseInt(args[0]);  //total people to enter room
@@ -45,14 +43,12 @@ public class SchedulingSimulation {
 		//create barman
         Andre= new Barman(startSignal,sched); 
      	Andre.start();
-  
 	    //create all the patrons, who all need access to Andre
 		patrons = new Patron[noPatrons];
 		for (int i=0;i<noPatrons;i++) {
 			patrons[i] = new Patron(i,startSignal,Andre);
 			patrons[i].start();
 		}
-		
 		System.out.println("------Andre the Barman Scheduling Simulation------");
 		System.out.println("-------------- with "+ Integer.toString(noPatrons) + " patrons---------------");
 

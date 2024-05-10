@@ -21,9 +21,9 @@ public class Patron extends Thread {
 	private int lengthOfOrder;
 	private long startTime, endTime, arrivalTime, waitingTime; //for all the metrics
 	public static FileWriter fileW;
-	private Long firstDrinkStartTime;
-
-
+	private long drinkStartTime;
+	private long drinkEndTime;
+    private long executionTimeSum;
 	private DrinkOrder [] drinksOrder;
 	
 	Patron( int ID,  CountDownLatch startSignal, Barman aBarman) {
@@ -61,19 +61,30 @@ public class Patron extends Thread {
 	        startTime = System.currentTimeMillis();//started placing orders
 			for(int i=0;i<lengthOfOrder;i++) {
 				System.out.println("Order placed by " + drinksOrder[i].toString());
+				if(i==0){
+					drinkStartTime =System.currentTimeMillis();
+				}
 				theBarman.placeDrinkOrder(drinksOrder[i]);
 			}
-			for(int i=0;i<lengthOfOrder;i++) {
+			drinksOrder[0].waitForOrder();
+			drinkEndTime=System.currentTimeMillis();
+			
+			executionTimeSum += drinksOrder[0].getExecutionTime();
+
+			for(int i=1;i<lengthOfOrder;i++) {
 				drinksOrder[i].waitForOrder();
+				executionTimeSum += drinksOrder[i].getExecutionTime();
+				
 			}
 
 			endTime = System.currentTimeMillis(); 
 			long totalTime = endTime - startTime; // TurnAround time?
-			waitingTime = startTime - arrivalTime;
-			System.out.println("start time: "+startTime+"endtime: "+endTime+" waiting time:"+waitingTime+"\n");
-			writeToFile( String.format("%d,%d,%d\n",ID,arrivalTime,totalTime));
+			waitingTime = totalTime-executionTimeSum;
+			System.out.println("response time for "+this.ID+" is "+(drinkEndTime-drinkStartTime));
+		    System.out.println("waiting time for patron :"+this.ID+" is "+waitingTime+"\n");
+			writeToFile( String.format("%d,%d,%d,%d,%d\n",ID,arrivalTime,totalTime,waitingTime,(drinkEndTime-drinkStartTime)));
 			System.out.println("Patron "+ this.ID + " got order in " + totalTime);
-		} catch (InterruptedException e1) {  //do nothing
+		} catch (InterruptedException e1) {//do nothing
 		} catch (IOException e) {
 			//  Auto-generated catch block
 			e.printStackTrace();
