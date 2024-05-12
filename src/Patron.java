@@ -63,11 +63,13 @@ public class Patron extends Thread {
 				System.out.println("Order placed by " + drinksOrder[i].toString());
 				if(i==0){
 					drinkStartTime =System.currentTimeMillis();
+					theBarman.placeDrinkOrder(drinksOrder[i]);
+					drinksOrder[0].waitForOrder();
+			drinkEndTime=System.currentTimeMillis();
 				}
 				theBarman.placeDrinkOrder(drinksOrder[i]);
+				
 			}
-			drinksOrder[0].waitForOrder();
-			drinkEndTime=System.currentTimeMillis();
 			
 			executionTimeSum += drinksOrder[0].getExecutionTime();
 
@@ -87,7 +89,7 @@ public class Patron extends Thread {
 		} catch (InterruptedException e1) {//do nothing
 		} catch (IOException e) {
 			//  Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 }
 }

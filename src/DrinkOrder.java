@@ -80,6 +80,9 @@ public class DrinkOrder  {
     		this.wait();
     	}
     }
+    public synchronized int getOrderer(){// patron ID getter.
+        return orderer;  
+    }
     
     @Override
     public String toString() {
